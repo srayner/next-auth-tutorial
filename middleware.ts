@@ -6,6 +6,8 @@ import {
   authRoutes,
   publicRoutes,
 } from "@/routes";
+import { NextResponse } from "next/server";
+import { CgChevronDoubleLeft } from "react-icons/cg";
 
 const { auth } = NextAuth(authConfig);
 
@@ -17,21 +19,22 @@ export default auth((req) => {
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
 
   if (isApiAuthRoute) {
-    return null;
+    return;
   }
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    return null;
+    return;
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return Response.redirect(new URL("/auth/login", nextUrl));
+    console.log("not signed in, redirecting...");
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
   }
 
-  return null;
+  return;
 });
 
 export const config = {
